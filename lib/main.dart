@@ -2,7 +2,6 @@ import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_sms/flutter_sms.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -37,46 +36,32 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  DateTime? selectedDateTime;
-  @override
-  void initState() {
-    super.initState();
-  }
 
-  // static void dataToFirebase() async {
-  //   WidgetsFlutterBinding.ensureInitialized();
-  //   await Firebase.initializeApp();
-  //   FirebaseFirestore db = FirebaseFirestore.instance;
-  //   final city = <String, dynamic>{
-  //     "name": "Los Angeles",
-  //     "state": "CA",
-  //     "country": "USA",
-  //     "date": DateTime.now(),
-  //   };
-  //   print("in firebase");
-  //   await db
-  //       .collection("cities")
-  //       .doc()
-  //       .set(city)
-  //       .then((value) => print("Success"))
-  //       .onError((error, stackTrace) => print("$error"));
-  // }
+  DateTime? selectedDateTime;
+  
+  static void dataToFirebase() async {
+    WidgetsFlutterBinding.ensureInitialized();
+    await Firebase.initializeApp();
+    FirebaseFirestore db = FirebaseFirestore.instance;
+    final city = <String, dynamic>{
+      "name": "Los Angeles",
+      "state": "CA",
+      "country": "USA",
+      "date": DateTime.now(),
+    };
+    print("in firebase");
+    await db
+        .collection("cities")
+        .doc()
+        .set(city)
+        .then((value) => print("Success"))
+        .onError((error, stackTrace) => print("$error"));
+  }
 
   // void _scheduleOneShotAlarm() async {
   //   await AndroidAlarmManager.oneShotAt(selectedDateTime!, 1, dataToFirebase);
   // }
 
-  void sendSms() async {
-    String _result = await sendSMS(
-            message: "This is Test Sms",
-            recipients: ["03096915024"],
-            sendDirect: true)
-        .catchError((onError) {
-      print(onError);
-      
-    });
-    print(_result);
-  }
 
   Future<void> _selectTime() async {
     final TimeOfDay? picked = await showTimePicker(
@@ -93,7 +78,7 @@ class _MyHomePageState extends State<MyHomePage> {
           picked.minute,
         );
       });
-      await AndroidAlarmManager.oneShotAt(selectedDateTime!, 1, sendSms);
+      await AndroidAlarmManager.oneShotAt(selectedDateTime!, 1, dataToFirebase);
     }
   }
 
