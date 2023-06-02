@@ -1,12 +1,13 @@
 import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:timezone/timezone.dart' as tz;
+import 'package:timezone/data/latest_all.dart' as tz;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await AndroidAlarmManager.initialize();
-
+  tz.initializeTimeZones();
   runApp(const MyApp());
 }
 
@@ -36,32 +37,46 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-
   DateTime? selectedDateTime;
-  
-  static void dataToFirebase() async {
-    WidgetsFlutterBinding.ensureInitialized();
-    await Firebase.initializeApp();
-    FirebaseFirestore db = FirebaseFirestore.instance;
-    final city = <String, dynamic>{
-      "name": "Los Angeles",
-      "state": "CA",
-      "country": "USA",
-      "date": DateTime.now(),
-    };
-    print("in firebase");
-    await db
-        .collection("cities")
-        .doc()
-        .set(city)
-        .then((value) => print("Success"))
-        .onError((error, stackTrace) => print("$error"));
-  }
 
-  // void _scheduleOneShotAlarm() async {
-  //   await AndroidAlarmManager.oneShotAt(selectedDateTime!, 1, dataToFirebase);
+  // static void dataToFirebase() async {
+  //   WidgetsFlutterBinding.ensureInitialized();
+  //   await Firebase.initializeApp();
+  //   FirebaseFirestore db = FirebaseFirestore.instance;
+  //   final city = <String, dynamic>{
+  //     "name": "Los Angeles",
+  //     "state": "CA",
+  //     "country": "USA",
+  //     "date": DateTime.now(),
+  //   };
+  //   print("in firebase");
+  //   await db
+  //       .collection("cities")
+  //       .doc()
+  //       .set(city)
+  //       .then((value) => print("Success"))
+  //       .onError((error, stackTrace) => print("$error"));
   // }
 
+  static void showNotification() async {
+    FlutterLocalNotificationsPlugin flip = FlutterLocalNotificationsPlugin();
+    var android = const AndroidInitializationSettings('@mipmap/ic_launcher');
+    var settings = InitializationSettings(android: android);
+    flip.initialize(settings);
+
+    var androidPlatformChannelSpecifics = const AndroidNotificationDetails(
+        'Sms Reminder', 'Sms',
+        channelDescription: 'Notifications Used For Sms Reminder',
+        importance: Importance.max,
+        priority: Priority.high);
+
+    var platformChannelSpecifics = NotificationDetails(
+      android: androidPlatformChannelSpecifics,
+    );
+    await flip.show(0, 'Arbisoft', 'You are welcome to join us from june 5',
+        platformChannelSpecifics,
+        payload: 'Default_Sound');
+  }
 
   Future<void> _selectTime() async {
     final TimeOfDay? picked = await showTimePicker(
@@ -78,7 +93,9 @@ class _MyHomePageState extends State<MyHomePage> {
           picked.minute,
         );
       });
-      await AndroidAlarmManager.oneShotAt(selectedDateTime!, 1, dataToFirebase);
+      bool isSchedule = await AndroidAlarmManager.oneShotAt(
+          selectedDateTime!, 1, showNotification);
+      print(isSchedule);
     }
   }
 
@@ -97,6 +114,30 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
+  void sheduledNotification() async {
+    FlutterLocalNotificationsPlugin flip = FlutterLocalNotificationsPlugin();
+    var android = const AndroidInitializationSettings('@mipmap/ic_launcher');
+    var settings = InitializationSettings(android: android);
+    flip.initialize(settings);
+    await flip.zonedSchedule(
+        0,
+        'Arbisoft',
+        'You are welcome to join us from june 5',
+        tz.TZDateTime.now(tz.local).add(const Duration(seconds: 10)),
+        const NotificationDetails(
+          android: AndroidNotificationDetails(
+            'Sms Reminder',
+            'Sms',
+            channelDescription: 'Notifications Used For Sms Reminder',
+            importance: Importance.max,
+            priority: Priority.high,
+          ),
+        ),
+        androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+        uiLocalNotificationDateInterpretation:
+            UILocalNotificationDateInterpretation.absoluteTime);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -112,12 +153,21 @@ class _MyHomePageState extends State<MyHomePage> {
               width: 170,
               height: 50,
               child: ElevatedButton.icon(
-                  onPressed: () {
-                    _chooseDate();
-                  },
-                  icon: const Icon(Icons.calendar_today),
-                  label: const Text("oneShotAt")),
+                onPressed: () {
+                  _chooseDate();
+                },
+                icon: const Icon(Icons.calendar_today),
+                label: const Text("oneShotAt"),
+              ),
             ),
+            const SizedBox(
+              height: 100,
+            ),
+            ElevatedButton.icon(
+              onPressed: sheduledNotification,
+              icon: const Icon(Icons.notifications),
+              label: const Text("Notify"),
+            )
           ],
         ),
       ),

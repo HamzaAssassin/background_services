@@ -1,0 +1,25 @@
+-- Merging decision tree log ---
+manifest
+ADDED from /home/hamza/.pub-cache/hosted/pub.dev/android_alarm_manager_plus-3.0.1/android/src/main/AndroidManifest.xml:1:1-69
+INJECTED from /home/hamza/.pub-cache/hosted/pub.dev/android_alarm_manager_plus-3.0.1/android/src/main/AndroidManifest.xml:1:1-69
+INJECTED from /home/hamza/.pub-cache/hosted/pub.dev/android_alarm_manager_plus-3.0.1/android/src/main/AndroidManifest.xml:1:1-69
+	package
+		ADDED from /home/hamza/.pub-cache/hosted/pub.dev/android_alarm_manager_plus-3.0.1/android/src/main/AndroidManifest.xml:1:11-66
+		INJECTED from /home/hamza/.pub-cache/hosted/pub.dev/android_alarm_manager_plus-3.0.1/android/src/main/AndroidManifest.xml
+		INJECTED from /home/hamza/.pub-cache/hosted/pub.dev/android_alarm_manager_plus-3.0.1/android/src/main/AndroidManifest.xml
+	xmlns:android
+		ADDED from /home/hamza/.pub-cache/hosted/pub.dev/android_alarm_manager_plus-3.0.1/android/src/main/AndroidManifest.xml:1:1-69
+uses-sdk
+INJECTED from /home/hamza/.pub-cache/hosted/pub.dev/android_alarm_manager_plus-3.0.1/android/src/main/AndroidManifest.xml reason: use-sdk injection requested
+INJECTED from /home/hamza/.pub-cache/hosted/pub.dev/android_alarm_manager_plus-3.0.1/android/src/main/AndroidManifest.xml
+INJECTED from /home/hamza/.pub-cache/hosted/pub.dev/android_alarm_manager_plus-3.0.1/android/src/main/AndroidManifest.xml
+INJECTED from /home/hamza/.pub-cache/hosted/pub.dev/android_alarm_manager_plus-3.0.1/android/src/main/AndroidManifest.xml
+INJECTED from /home/hamza/.pub-cache/hosted/pub.dev/android_alarm_manager_plus-3.0.1/android/src/main/AndroidManifest.xml
+	android:targetSdkVersion
+		INJECTED from /home/hamza/.pub-cache/hosted/pub.dev/android_alarm_manager_plus-3.0.1/android/src/main/AndroidManifest.xml
+		ADDED from /home/hamza/.pub-cache/hosted/pub.dev/android_alarm_manager_plus-3.0.1/android/src/main/AndroidManifest.xml
+		INJECTED from /home/hamza/.pub-cache/hosted/pub.dev/android_alarm_manager_plus-3.0.1/android/src/main/AndroidManifest.xml
+	android:minSdkVersion
+		INJECTED from /home/hamza/.pub-cache/hosted/pub.dev/android_alarm_manager_plus-3.0.1/android/src/main/AndroidManifest.xml
+		ADDED from /home/hamza/.pub-cache/hosted/pub.dev/android_alarm_manager_plus-3.0.1/android/src/main/AndroidManifest.xml
+		INJECTED from /home/hamza/.pub-cache/hosted/pub.dev/android_alarm_manager_plus-3.0.1/android/src/main/AndroidManifest.xml
