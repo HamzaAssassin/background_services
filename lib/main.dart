@@ -1,5 +1,6 @@
 import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_contacts/flutter_contacts.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/timezone.dart' as tz;
 import 'package:timezone/data/latest_all.dart' as tz;
@@ -138,35 +139,88 @@ class _MyHomePageState extends State<MyHomePage> {
             UILocalNotificationDateInterpretation.absoluteTime);
   }
 
+  Future<List<Contact>> getContacts() async {
+    return await FlutterContacts.requestPermission()
+        .then((value) => FlutterContacts.getContacts());
+  }
+
   @override
   Widget build(BuildContext context) {
+    var screenSize = MediaQuery.of(context).size;
+    var screenHeight = screenSize.height;
+    var bodyHeight = screenHeight - kToolbarHeight;
+    // var width = screenSize.width;
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text(widget.title),
       ),
-      body: Center(
+      body: SafeArea(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             SizedBox(
-              width: 170,
-              height: 50,
-              child: ElevatedButton.icon(
-                onPressed: () {
-                  _chooseDate();
-                },
-                icon: const Icon(Icons.calendar_today),
-                label: const Text("oneShotAt"),
+              height: bodyHeight * 0.1,
+              child: Center(
+                child: ElevatedButton.icon(
+                  onPressed: () {
+                    _chooseDate();
+                  },
+                  icon: const Icon(Icons.calendar_today),
+                  label: const Text("oneShotAt"),
+                ),
               ),
             ),
-            const SizedBox(
-              height: 100,
+            SizedBox(
+              height: bodyHeight * 0.1,
+              child: Center(
+                child: ElevatedButton.icon(
+                  onPressed: sheduledNotification,
+                  icon: const Icon(Icons.notifications),
+                  label: const Text("Notify"),
+                ),
+              ),
             ),
-            ElevatedButton.icon(
-              onPressed: sheduledNotification,
-              icon: const Icon(Icons.notifications),
-              label: const Text("Notify"),
+            Container(
+              height: bodyHeight * 0.764,
+              decoration:  BoxDecoration(
+                  color: Colors.blue.shade200,
+                  borderRadius:const BorderRadius.only(
+                    topLeft: Radius.circular(30),
+                    topRight: Radius.circular(30),
+                  )),
+              child: FutureBuilder(
+                future: getContacts(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.done) {
+                    if (snapshot.hasData) {
+                      return ListView.builder(
+                        itemCount: snapshot.data!.length,
+                        itemBuilder: (context, index) {
+                          return ListTile(
+                            leading: CircleAvatar(
+                              child: Text(index.toString()),
+                            ),
+                            title: Text(
+                                snapshot.data![index].displayName.toString()),
+                            subtitle: Text(
+                                'Phone number : ${snapshot.data![index].phones.isNotEmpty ? snapshot.data![index].phones.first.number : '(none)'}'),
+                          );
+                        },
+                      );
+                    } else if (snapshot.hasError) {
+                      return Center(
+                        child: Text(snapshot.error.toString()),
+                      );
+                    }
+                  } else if (snapshot.connectionState ==
+                      ConnectionState.waiting) {
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  }
+                  return const SizedBox();
+                },
+              ),
             )
           ],
         ),

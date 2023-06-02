@@ -122,6 +122,12 @@
       "languageVersion": "3.0"
     },
     {
+      "name": "flutter_contacts",
+      "rootUri": "file:///home/hamza/.pub-cache/hosted/pub.dev/flutter_contacts-1.1.6",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
       "name": "flutter_lints",
       "rootUri": "file:///home/hamza/.pub-cache/hosted/pub.dev/flutter_lints-2.0.1",
       "packageUri": "lib/",
@@ -290,7 +296,7 @@
       "languageVersion": "3.0"
     }
   ],
-  "generated": "2023-06-02T01:12:30.844610Z",
+  "generated": "2023-06-02T01:36:34.560100Z",
   "generator": "pub",
   "generatorVersion": "3.0.2"
 }
